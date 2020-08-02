@@ -1,17 +1,26 @@
 import React, { Component } from 'react';
 import Jumbotron from "./Jumbotron";
 import Table from "./Table/Table";
+import axios from "axios";
+
 class Home extends Component {
   constructor() {
     super()
 
     this.state = { 
-      course_modules: [
-        { id: 1, title: "happy q", description: "me", active: false },
-        { id: 2, title: "happy w", description: "mee", active: false },
-        { id: 3, title: "happy e", description: "meee", active: false }
-      ]
+      course_modules: []
     }
+  }
+
+  componentDidMount(){
+    let result = []
+    axios.get('/episodes.json')
+      .then(data => {
+        data.data.data.map((item) => {
+          result.push({id: item.id, title: item.title, description: item.description, url: item.url, active: false})
+          this.setState({course_modules: result})
+        })
+      })
   }
 
   handleVideoChange(item, event){
